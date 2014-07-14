@@ -1,23 +1,70 @@
 '''   Temperature Manager
 
         Arguments: None
-        Returns: Button_ID
+        Returns: Mone
 
 '''
 
 class TemperatureManager(object):
     
-    def __init__(self):
+    def __init__(self, gpioManager):
         
-        self.setup()
+        self._gpioManager = gpioManager
+        self._setup()
+        
         print "TemperatureManager::init"
 
-    def setup(self):
-        print "TemperatureManager::setup"
-
+    def _setup(self):
+        self._initializaMemberAttributes()
 
     def exit(self):
         print "TemperatureManager::exit"
 
     def update(self, elapsedTime):
-        pass
+        self.temperature = self._gpioManager.getTemperature()
+        self._updateLogic()
+
+    def _initializaMemberAttributes(self):
+        self.temperatureMax = 50
+        self.hysteresisMargin = 20
+        self.coolerState = False
+
+    def _updateLogic(self):
+        
+        if( self._isHot() && self._isCoolerOff() ):
+            self._turnOnCooler()
+            self.temperatureMax -= hysteresisMargin
+
+        elif( self._isCold() && self._isCoolerOn() ):
+            self._turnOffCooler)
+            self.temperatureMax += hysteresisMargin
+
+    def _isHot(self):
+        return self.temperature>self.temperatureMax
+
+    def _isCoolerOff(self):
+        return !self.coolerState
+
+    def _isCold(self):
+        return self.temperature<=self.temperatureMax
+
+    def _isCoolerOn(self):
+        return self.coolerState
+
+    def _turnOnCooler(self):
+        self._gpioManager.turnOnCooler()
+        self.coolerState = True
+        print "TemperatureManager::_turnOnCooler"
+
+    def _turnOffCooler(self):
+        self._gpioManager.turnOffCooler()
+        self.coolerState = False
+        print "TemperatureManager::_turnOffCooler"
+
+
+
+
+
+
+
+
