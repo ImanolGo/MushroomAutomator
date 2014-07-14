@@ -43,13 +43,13 @@ class GpioManager(object):
         self._readDhtSensor()
 
     def _initializaMemberAttributes(self):
-        self.sensor = Adafruit_DHT.DHT22
-        self.SENSOR_PIN = PinNum._9
+        self.sensorDht22 = Adafruit_DHT.DHT22
+        self.SENSOR_DHT22_PIN = PinNum._9
         self.HUMIDIFIER_PIN = PinNum._7
         self.COOLER_PIN = PinNum._4
 
-        self.humidity = 0.0f
-        self.temperature = 0.0f
+        self.humidity = 0.0
+        self.temperature = 0.0
 
     def _setupGPIO(self):
      
@@ -61,13 +61,13 @@ class GpioManager(object):
         GPIO.setup(self.HUMIDIFIER_PIN, GPIO.OUT)
         GPIO.setup(self.COOLER_PIN, GPIO.OUT)
 
-        GPIO.output(HUMIDIFIER_PIN, GPIO.LOW)
-        GPIO.output(COOLER_PIN, GPIO.LOW)
+        GPIO.output(self.HUMIDIFIER_PIN, GPIO.LOW)
+        GPIO.output(self.COOLER_PIN, GPIO.LOW)
        
     def _readDhtSensor(self):
         # Try to grab a sensor reading.  Use the read_retry method which will retry up
         # to 15 times to get a sensor reading (waiting 2 seconds between each retry).
-        self.humidity, self.temperature = Adafruit_DHT.read_retry(self.sensor, self.pin)
+        self.humidity, self.temperature = Adafruit_DHT.read_retry(self.sensorDht22, self.SENSOR_DHT22_PIN)
         print "GpioManager::_readSensor"
         print("GpioManager:: humidity = %f ,temperature = %f " % (self.humidity, self.temperature))
 
@@ -78,16 +78,16 @@ class GpioManager(object):
         return self.temperature
 
     def turnOnHumidifier(self):
-        GPIO.output(HUMIDIFIER_PIN, GPIO.HIGH)
+        GPIO.output(self.HUMIDIFIER_PIN, GPIO.HIGH)
 
     def turnOffHumidifier(self):
-        GPIO.output(HUMIDIFIER_PIN, GPIO.LOW)
+        GPIO.output(self.HUMIDIFIER_PIN, GPIO.LOW)
 
     def turnOnCooler(self):
-        GPIO.output(COOLER_PIN, GPIO.HIGH)
+        GPIO.output(self.COOLER_PIN, GPIO.HIGH)
 
     def turnOffCooler(self):
-        GPIO.output(COOLER_PIN, GPIO.LOW)
+        GPIO.output(self.COOLER_PIN, GPIO.LOW)
 
 
 

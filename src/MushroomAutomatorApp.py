@@ -24,9 +24,6 @@ class MushroomAutomatorApp(object):
         
         self._initializaMemberAttributes()
         self._createManagers()
-        self._setButtonActions()
-        self._setUdpReceiver()
-        self._setSystemToDefaultLanguage()
 
         print "MushroomAutomatorApp::init"
 

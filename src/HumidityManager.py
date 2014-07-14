@@ -33,11 +33,11 @@ class HumidityManager(object):
 
     def _updateLogic(self):
         
-        if( self._isDry() && self._isHumidifierOff() ):
+        if( self._isDry() and self._isHumidifierOff() ):
             self._turnOffHumidifier()
             self.humidyMinimun += hysteresisMargin
 
-        elif( self._isHumid() && self._isHumidifierOn() ):
+        elif( self._isHumid() and self._isHumidifierOn() ):
             self._turnOnHumidifier()
             self.humidyMinimun -= hysteresisMargin
 
@@ -51,7 +51,7 @@ class HumidityManager(object):
         return self.humidity>=self.humidityMin
 
     def _isHumidifierOff(self):
-        return !self.humidifierState
+        return not(self.humidifierState)
 
     def _turnOnHumidifier(self):
         self._gpioManager.turnOnHumidifier()

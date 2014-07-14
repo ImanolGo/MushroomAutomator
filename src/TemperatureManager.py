@@ -31,19 +31,19 @@ class TemperatureManager(object):
 
     def _updateLogic(self):
         
-        if( self._isHot() && self._isCoolerOff() ):
+        if( self._isHot() and self._isCoolerOff() ):
             self._turnOnCooler()
             self.temperatureMax -= hysteresisMargin
 
-        elif( self._isCold() && self._isCoolerOn() ):
-            self._turnOffCooler)
+        elif( self._isCold() and self._isCoolerOn() ):
+            self._turnOffCooler()
             self.temperatureMax += hysteresisMargin
 
     def _isHot(self):
         return self.temperature>self.temperatureMax
 
     def _isCoolerOff(self):
-        return !self.coolerState
+        return not(self.coolerState)
 
     def _isCold(self):
         return self.temperature<=self.temperatureMax
