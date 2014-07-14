@@ -1,23 +1,72 @@
 '''   Humidity Manager
 
         Arguments: None
-        Returns: Button_ID
+        Returns: None
 
 '''
 
+import GpioManager
+
 class HumidityManager(object):
     
-    def __init__(self):
+    def __init__(self, gpioManager):
         
-        self.setup()
+        self._gpioManager = gpioManager
+        self._setup()
+        
         print "HumidityManager::init"
 
-    def setup(self):
-        print "HumidityManager::setup"
-
+    def _setup(self):
+        self._initializaMemberAttributes()
 
     def exit(self):
         print "HumidityManager::exit"
 
     def update(self, elapsedTime):
-        pass
+        self.humidity = self._gpioManager.getHumidity()
+        self._updateLogic()
+
+    def _initializaMemberAttributes(self):
+        self.humidityMin = 30
+        self.hysteresisMargin = 30
+        self.humidifierState = False
+
+    def _updateLogic(self):
+        
+        if( self._isDry() && self._isHumidifierOff() ):
+            self._turnOffHumidifier()
+            self.humidyMinimun += hysteresisMargin
+
+        elif( self._isHumid() && self._isHumidifierOn() ):
+            self._turnOnHumidifier()
+            self.humidyMinimun -= hysteresisMargin
+
+    def _isDry(self):
+        return self.humidity<self.humidityMin
+
+    def _isHumidifierOn(self):
+        return self.humidifierState
+
+    def _isHumid(self):
+        return self.humidity>=self.humidityMin
+
+    def _isHumidifierOff(self):
+        return !self.humidifierState
+
+    def _turnOnHumidifier(self):
+        self._gpioManager.turnOnHumidifier()
+        self.humidifierState = True
+        print "HumidityManager::_turnOnHumidifier"
+
+    def _turnOffHumidifier(self):
+        self._gpioManager.turnOffHumidifier()
+        self.humidifierState = False
+        print "HumidityManager::_turnOffHumidifier"
+
+
+
+
+
+
+
+
