@@ -12,6 +12,7 @@ import time
 
 from HumidityManager import HumidityManager
 from TemperatureManager import TemperatureManager
+from GpioManager import GpioManager
 
 
 class MushroomAutomatorApp(object):
@@ -34,8 +35,9 @@ class MushroomAutomatorApp(object):
         self.start = time.clock()
 
     def _createManagers(self):
-        self.temperatureManager = TemperatureManager()
-        self.humidityManager = HumidityManager()
+        self.gpioManager = GpioManager()
+        self.temperatureManager = TemperatureManager(self.gpioManager)
+        self.humidityManager = HumidityManager(self.gpioManager)
 
     def callWhenKeyInterrupt(self):
         # exits when you press CTRL+C  
@@ -53,6 +55,7 @@ class MushroomAutomatorApp(object):
         self._exitManagers()
 
     def _exitManagers(self):
+        self.gpioManager.exit()
         self.temperatureManager.exit()
         self.humidityManager.exit()
 
@@ -71,6 +74,7 @@ class MushroomAutomatorApp(object):
         self.start = time.clock()
 
     def _updateManagers(self):
+        self.gpioManager.update(self.elapsedTime)
         self.humidityManager.update(self.elapsedTime)
         self.temperatureManager.update(self.elapsedTime)
 
